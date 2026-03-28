@@ -26,6 +26,11 @@ function AppContent() {
     setSelectedId(resort.id);
   }, []);
 
+  const handleRadiusChange = useCallback((radius: number) => {
+    setRadiusKm(radius);
+    setSelectedId(null);
+  }, []);
+
   if (geo.loading) {
     return <LoadingScreen message="Requesting your location..." />;
   }
@@ -68,7 +73,7 @@ function AppContent() {
           onSelectResort={handleSelectResort}
           accessToken={MAPBOX_TOKEN}
         />
-        <RadiusControl radiusKm={radiusKm} onChange={setRadiusKm} />
+        <RadiusControl radiusKm={radiusKm} onChange={handleRadiusChange} />
       </div>
       <ResortCardCarousel resorts={resorts} selectedId={selectedId} onSelect={handleSelectResort} />
     </div>

@@ -14,11 +14,11 @@ export function renderPopupHTML(resort: Resort): string {
         </span>
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px; color: #64748b;">
-        <span>❄ Fresh: ${resort.condition.freshSnowCm}cm</span>
-        <span>🏔 Base: ${resort.condition.snowBaseCm}cm</span>
-        <span>🌡 Temp: ${resort.condition.temperature}°C</span>
-        <span>💨 Wind: ${resort.condition.windSpeedKmh} km/h</span>
-        <span>📏 Distance: ${resort.distanceKm} km</span>
+        <span>❄ Fresh: ${Math.round(resort.condition.freshSnowCm)}cm</span>
+        <span>🏔 Base: ${Math.round(resort.condition.snowBaseCm)}cm</span>
+        <span>🌡 Temp: ${Math.round(resort.condition.temperature)}°C</span>
+        <span>💨 Wind: ${Math.round(resort.condition.windSpeedKmh)} km/h</span>
+        <span>📏 Distance: ${Math.round(resort.distanceKm)} km</span>
         <span>⬆ Elev: ${resort.elevation}m</span>
       </div>
       ${resort.condition.freezeThawRisk ? '<div style="margin-top: 8px; font-size: 11px; color: #f59e0b;">⚠ Freeze-thaw risk — possible icy conditions</div>' : ""}
