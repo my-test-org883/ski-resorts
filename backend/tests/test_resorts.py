@@ -10,7 +10,7 @@ def service() -> ResortService:
 
 def test_load_resorts(service: ResortService) -> None:
     resorts = service.all_resorts
-    assert len(resorts) == 44
+    assert len(resorts) == 50
     assert any(r["id"] == "whistler" for r in resorts)
     assert "lat" in resorts[0]
     assert "lng" in resorts[0]

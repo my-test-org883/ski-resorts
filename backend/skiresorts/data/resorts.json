@@ -42,5 +42,11 @@
   {"id": "sunday-river", "name": "Sunday River", "lat": 44.4734, "lng": -70.8564, "elevation": 960, "region": "ME"},
   {"id": "sugarloaf", "name": "Sugarloaf", "lat": 45.0314, "lng": -70.3131, "elevation": 1291, "region": "ME"},
   {"id": "whiteface", "name": "Whiteface Mountain", "lat": 44.3656, "lng": -73.9026, "elevation": 1483, "region": "NY"},
-  {"id": "snowshoe", "name": "Snowshoe Mountain", "lat": 38.4067, "lng": -79.9940, "elevation": 1482, "region": "WV"}
+  {"id": "snowshoe", "name": "Snowshoe Mountain", "lat": 38.4067, "lng": -79.9940, "elevation": 1482, "region": "WV"},
+  {"id": "bromont", "name": "Bromont", "lat": 45.3167, "lng": -72.6500, "elevation": 405, "region": "QC"},
+  {"id": "mont-sainte-anne", "name": "Mont-Sainte-Anne", "lat": 47.0747, "lng": -70.9069, "elevation": 800, "region": "QC"},
+  {"id": "le-massif", "name": "Le Massif de Charlevoix", "lat": 47.2758, "lng": -70.6167, "elevation": 770, "region": "QC"},
+  {"id": "mont-orford", "name": "Mont Orford", "lat": 45.3228, "lng": -72.1847, "elevation": 853, "region": "QC"},
+  {"id": "mont-sutton", "name": "Mont Sutton", "lat": 45.1003, "lng": -72.5614, "elevation": 840, "region": "QC"},
+  {"id": "sommet-saint-sauveur", "name": "Sommet Saint-Sauveur", "lat": 45.9333, "lng": -74.1667, "elevation": 416, "region": "QC"}
 ]

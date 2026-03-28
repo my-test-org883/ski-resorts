@@ -14,10 +14,10 @@ export function renderPopupHTML(resort: Resort): string {
         </span>
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px; color: #64748b;">
-        <span>❄ Fresh: ${Math.round(resort.condition.freshSnowCm)}cm</span>
-        <span>🏔 Base: ${Math.round(resort.condition.snowBaseCm)}cm</span>
-        <span>🌡 Temp: ${Math.round(resort.condition.temperature)}°C</span>
-        <span>💨 Wind: ${Math.round(resort.condition.windSpeedKmh)} km/h</span>
+        <span>❄ Fresh: ${parseFloat(resort.condition.freshSnowCm.toFixed(1))}cm</span>
+        <span>🏔 Base: ${parseFloat(resort.condition.snowBaseCm.toFixed(1))}cm</span>
+        <span>🌡 Temp: ${parseFloat(resort.condition.temperature.toFixed(1))}°C</span>
+        <span>💨 Wind: ${parseFloat(resort.condition.windSpeedKmh.toFixed(1))} km/h</span>
         <span>📏 Distance: ${Math.round(resort.distanceKm)} km</span>
         <span>⬆ Elev: ${resort.elevation}m</span>
       </div>
