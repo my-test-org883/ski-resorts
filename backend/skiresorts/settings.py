@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    cors_origins: list[str] = ["http://localhost:5173"]
+    cors_origins: list[str] = ["http://localhost:5173", "https://ski-resorts-fe.vercel.app"]
     open_meteo_base_url: str = "https://api.open-meteo.com/v1/forecast"
     cache_ttl_seconds: int = 3600
     default_radius_km: float = 300.0

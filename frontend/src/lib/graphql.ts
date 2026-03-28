@@ -1,7 +1,9 @@
 import { Client, cacheExchange, fetchExchange } from "urql";
 
+const API_URL = import.meta.env.VITE_API_URL ?? "";
+
 export const graphqlClient = new Client({
-  url: "/graphql",
+  url: `${API_URL}/graphql`,
   exchanges: [cacheExchange, fetchExchange],
 });
 
