@@ -118,7 +118,7 @@ jobs:
 
   deploy-backend:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [lint-backend, lint-frontend, test-backend, test-frontend, build-frontend]
+    needs: [lint-backend, test-backend]
     runs-on: ubuntu-latest
     defaults:
       run:
