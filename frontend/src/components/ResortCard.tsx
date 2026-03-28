@@ -54,8 +54,8 @@ export function ResortCard({ resort, selected, onClick }: ResortCardProps) {
       <div
         style={{ display: "flex", gap: "12px", fontSize: "12px", color: "var(--text-secondary)" }}
       >
-        <span>❄ {Math.round(resort.condition.freshSnowCm)}cm</span>
-        <span>🌡 {Math.round(resort.condition.temperature)}°</span>
+        <span>❄ {parseFloat(resort.condition.freshSnowCm.toFixed(1))}cm</span>
+        <span>🌡 {parseFloat(resort.condition.temperature.toFixed(1))}°</span>
       </div>
       <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
         {Math.round(resort.distanceKm)} km away
