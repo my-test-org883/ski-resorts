@@ -1,5 +1,5 @@
 import time
-from typing import TypedDict
+from typing import TypedDict, cast
 
 import httpx
 
@@ -48,7 +48,7 @@ class WeatherService:
         return weather
 
     async def _call_api(self, lat: float, lng: float) -> _MeteoResponse:
-        params = {
+        params: dict[str, str | int | float] = {
             "latitude": lat,
             "longitude": lng,
             "current": "temperature_2m,wind_speed_10m,snowfall,snow_depth",
@@ -59,7 +59,7 @@ class WeatherService:
         }
         response = await self._client.get(self._base_url, params=params)
         response.raise_for_status()
-        return response.json()
+        return cast(_MeteoResponse, response.json())
 
     @staticmethod
     def _parse_response(data: _MeteoResponse) -> WeatherData:

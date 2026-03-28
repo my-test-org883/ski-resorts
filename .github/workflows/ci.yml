@@ -20,10 +20,14 @@ jobs:
         run: pip install poetry
       - name: Install dependencies
         run: poetry install
-      - name: Ruff check
-        run: poetry run ruff check .
+      - name: Check lock file
+        run: poetry check --lock
+      - name: Mypy
+        run: poetry run mypy .
       - name: Ruff format check
         run: poetry run ruff format --check .
+      - name: Ruff check
+        run: poetry run ruff check .
 
   lint-frontend:
     runs-on: ubuntu-latest
@@ -97,7 +101,7 @@ jobs:
 
   deploy-frontend:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [lint-backend, lint-frontend, test-backend, test-frontend, build-frontend]
+    needs: [lint-frontend, test-frontend, build-frontend]
     runs-on: ubuntu-latest
     defaults:
       run:
