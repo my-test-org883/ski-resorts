@@ -1,3 +1,16 @@
+[project]
+name = "skiresorts"
+version = "0.1.0"
+description = "Ski resort finder backend"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115.0",
+  "strawberry-graphql[fastapi]>=0.262.0",
+  "uvicorn[standard]>=0.34.0",
+  "httpx>=0.28.0",
+  "pydantic-settings>=2.7.0",
+]
+
 [tool.poetry]
 name = "skiresorts"
 version = "0.1.0"
