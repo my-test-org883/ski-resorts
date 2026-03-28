@@ -34,7 +34,7 @@ const mockResort: Resort = {
 describe("useResorts", () => {
   it("returns empty resorts with loading=false when lat/lng are null", () => {
     mockUseQuery.mockReturnValue([
-      { data: undefined, fetching: false, error: undefined },
+      { data: undefined, fetching: false, error: undefined, stale: false, hasNext: false },
       vi.fn(),
     ] as ReturnType<typeof useQuery>);
 
@@ -51,7 +51,13 @@ describe("useResorts", () => {
 
   it("passes pause=false when both lat and lng are provided", () => {
     mockUseQuery.mockReturnValue([
-      { data: { nearbyResorts: [mockResort] }, fetching: false, error: undefined },
+      {
+        data: { nearbyResorts: [mockResort] },
+        fetching: false,
+        error: undefined,
+        stale: false,
+        hasNext: false,
+      },
       vi.fn(),
     ] as ReturnType<typeof useQuery>);
 
@@ -72,6 +78,8 @@ describe("useResorts", () => {
         data: undefined,
         fetching: false,
         error: { message: "Network error" } as ReturnType<typeof useQuery>[0]["error"],
+        stale: false,
+        hasNext: false,
       },
       vi.fn(),
     ] as ReturnType<typeof useQuery>);
@@ -87,7 +95,7 @@ describe("useResorts", () => {
 
   it("returns loading=true while query is fetching", () => {
     mockUseQuery.mockReturnValue([
-      { data: undefined, fetching: true, error: undefined },
+      { data: undefined, fetching: true, error: undefined, stale: false, hasNext: false },
       vi.fn(),
     ] as ReturnType<typeof useQuery>);
 

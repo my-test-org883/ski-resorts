@@ -15,6 +15,7 @@ describe("graphqlClient", () => {
           __typename
         }
       `,
+      variables: {},
     };
     const operation = graphqlClient.createRequestOperation("query", request);
     expect(operation.context.url).toBe("/graphql");
