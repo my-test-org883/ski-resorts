@@ -1,4 +1,4 @@
-.PHONY: install install-backend install-frontend lint format test build dev
+.PHONY: install install-backend install-frontend lint format test test-coverage build dev
 
 install: install-backend install-frontend
 
@@ -21,6 +21,11 @@ format:
 
 test:
 	cd backend && poetry run pytest -v
+	cd frontend && npm test
+
+test-coverage:
+	cd backend && poetry run pytest -v
+	cd frontend && npm run test:coverage
 
 build:
 	cd frontend && npm run build
