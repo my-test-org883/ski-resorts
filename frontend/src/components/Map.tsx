@@ -96,7 +96,7 @@ export function Map({
         popupRef.current?.remove();
         popupRef.current = new mapboxgl.Popup({
           offset: 12,
-          maxWidth: "280px",
+          maxWidth: "360px",
           closeOnClick: false,
         })
           .setLngLat([resort.lng, resort.lat])
@@ -114,7 +114,7 @@ export function Map({
     if (!resort) return;
 
     popupRef.current?.remove();
-    popupRef.current = new mapboxgl.Popup({ offset: 12, maxWidth: "280px", closeOnClick: false })
+    popupRef.current = new mapboxgl.Popup({ offset: 12, maxWidth: "360px", closeOnClick: false })
       .setLngLat([resort.lng, resort.lat])
       .setHTML(renderPopupHTML(resort))
       .addTo(mapRef.current);
