@@ -1,3 +1,4 @@
+import { useRef, useCallback } from "react";
 import type { Resort } from "../types/resort";
 import { ResortCard } from "./ResortCard";
 
@@ -8,6 +9,16 @@ interface ResortCardCarouselProps {
 }
 
 export function ResortCardCarousel({ resorts, selectedId, onSelect }: ResortCardCarouselProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    if (!scrollRef.current) return;
+    if (e.deltaY !== 0) {
+      e.preventDefault();
+      scrollRef.current.scrollLeft += e.deltaY;
+    }
+  }, []);
+
   if (resorts.length === 0) {
     return (
       <div
@@ -32,6 +43,8 @@ export function ResortCardCarousel({ resorts, selectedId, onSelect }: ResortCard
 
   return (
     <div
+      ref={scrollRef}
+      onWheel={handleWheel}
       style={{
         display: "flex",
         gap: "10px",

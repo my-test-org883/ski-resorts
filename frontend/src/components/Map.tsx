@@ -81,10 +81,11 @@ export function Map({
         .setLngLat([resort.lng, resort.lat])
         .addTo(map);
 
-      el.addEventListener("click", () => {
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
         onSelectResort(resort);
         popupRef.current?.remove();
-        popupRef.current = new mapboxgl.Popup({ offset: 12, maxWidth: "280px" })
+        popupRef.current = new mapboxgl.Popup({ offset: 12, maxWidth: "280px", closeOnClick: false })
           .setLngLat([resort.lng, resort.lat])
           .setHTML(renderPopupHTML(resort))
           .addTo(map);
@@ -99,10 +100,8 @@ export function Map({
     const resort = resorts.find((r) => r.id === selectedId);
     if (!resort) return;
 
-    mapRef.current.flyTo({ center: [resort.lng, resort.lat], zoom: 9, duration: 800 });
-
     popupRef.current?.remove();
-    popupRef.current = new mapboxgl.Popup({ offset: 12, maxWidth: "280px" })
+    popupRef.current = new mapboxgl.Popup({ offset: 12, maxWidth: "280px", closeOnClick: false })
       .setLngLat([resort.lng, resort.lat])
       .setHTML(renderPopupHTML(resort))
       .addTo(mapRef.current);
