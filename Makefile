@@ -43,7 +43,7 @@ dev-backend:
 dev-frontend:
 	cd frontend && npm run dev
 
+pre-commit: format lint test build
+
 load-resorts:
 	cd backend && poetry run python -m scripts.load_resorts
-
-pre-commit: format lint test build
