@@ -78,7 +78,7 @@ def parse_feature(feature: dict[str, Any]) -> ResortEntity | None:
         name=name,
         lat=lat,
         lng=lng,
-        status=props.get("status", "operating"),
+        status=props.get("status") or "operating",
         country=country,
         region=region,
         locality=locality,
