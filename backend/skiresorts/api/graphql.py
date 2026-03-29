@@ -35,6 +35,20 @@ def create_schema(
             elevation=resort_data.max_elevation,
             distance_km=resort_data.distance_km,
             condition=condition,
+            country=resort_data.country,
+            region=resort_data.region,
+            has_downhill=resort_data.has_downhill,
+            has_nordic=resort_data.has_nordic,
+            min_elevation=resort_data.min_elevation,
+            max_elevation=resort_data.max_elevation,
+            vertical=resort_data.vertical,
+            total_run_length_km=resort_data.total_run_length_km,
+            run_count=resort_data.run_count,
+            lift_count=resort_data.lift_count,
+            easy_runs=resort_data.easy_runs,
+            intermediate_runs=resort_data.intermediate_runs,
+            advanced_runs=resort_data.advanced_runs,
+            expert_runs=resort_data.expert_runs,
         )
 
     @strawberry.type

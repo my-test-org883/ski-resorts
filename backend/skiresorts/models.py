@@ -63,6 +63,20 @@ class Resort:
     elevation: int
     distance_km: float
     condition: Condition
+    country: str | None = None
+    region: str | None = None
+    has_downhill: bool | None = None
+    has_nordic: bool | None = None
+    min_elevation: float | None = None
+    max_elevation: float | None = None
+    vertical: float | None = None
+    total_run_length_km: float | None = None
+    run_count: int | None = None
+    lift_count: int | None = None
+    easy_runs: int | None = None
+    intermediate_runs: int | None = None
+    advanced_runs: int | None = None
+    expert_runs: int | None = None
 
 
 class WeatherData(BaseModel):

@@ -16,6 +16,18 @@ export interface Resort {
   lng: number;
   distanceKm: number;
   elevation: number;
+  country: string | null;
+  region: string | null;
+  minElevation: number | null;
+  maxElevation: number | null;
+  vertical: number | null;
+  totalRunLengthKm: number | null;
+  runCount: number | null;
+  liftCount: number | null;
+  easyRuns: number | null;
+  intermediateRuns: number | null;
+  advancedRuns: number | null;
+  expertRuns: number | null;
   condition: Condition;
 }
 

@@ -6,9 +6,17 @@ interface ResortCardCarouselProps {
   resorts: Resort[];
   selectedId: string | null;
   onSelect: (resort: Resort) => void;
+  hasActiveFilters?: boolean;
+  onResetFilters?: () => void;
 }
 
-export function ResortCardCarousel({ resorts, selectedId, onSelect }: ResortCardCarouselProps) {
+export function ResortCardCarousel({
+  resorts,
+  selectedId,
+  onSelect,
+  hasActiveFilters = false,
+  onResetFilters,
+}: ResortCardCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
@@ -37,9 +45,36 @@ export function ResortCardCarousel({ resorts, selectedId, onSelect }: ResortCard
           textAlign: "center",
           color: "var(--text-muted)",
           fontSize: "14px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "12px",
         }}
       >
-        No resorts found within this radius. Try increasing the search distance.
+        {hasActiveFilters ? (
+          <>
+            <span style={{ color: "var(--text-secondary)" }}>No resorts match your filters.</span>
+            <button
+              aria-label="Reset filters"
+              onClick={onResetFilters}
+              style={{
+                background: "rgba(59, 130, 246, 0.1)",
+                border: "1px solid var(--accent-blue)",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--accent-blue)",
+                fontSize: "12px",
+                fontWeight: 500,
+                cursor: "pointer",
+                padding: "4px 12px",
+                transition: "background 0.15s",
+              }}
+            >
+              Reset filters
+            </button>
+          </>
+        ) : (
+          <span>No resorts found within this radius. Try increasing the search distance.</span>
+        )}
       </div>
     );
   }

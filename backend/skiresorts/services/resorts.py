@@ -14,8 +14,20 @@ class NearbyResort:
     lat: float
     lng: float
     max_elevation: int
-    region: str
+    region: str | None
     distance_km: float
+    country: str | None
+    has_downhill: bool
+    has_nordic: bool
+    min_elevation: float | None
+    vertical: float | None
+    total_run_length_km: float | None
+    run_count: int
+    lift_count: int
+    easy_runs: int
+    intermediate_runs: int
+    advanced_runs: int
+    expert_runs: int
 
 
 class ResortService:
@@ -44,8 +56,20 @@ class ResortService:
                         lat=row.lat,
                         lng=row.lng,
                         max_elevation=int(row.max_elevation or 0),
-                        region=row.region or "",
+                        region=row.region,
                         distance_km=round(distance, 1),
+                        country=row.country,
+                        has_downhill=row.has_downhill,
+                        has_nordic=row.has_nordic,
+                        min_elevation=row.min_elevation,
+                        vertical=row.vertical,
+                        total_run_length_km=row.total_run_length_km,
+                        run_count=row.run_count,
+                        lift_count=row.lift_count,
+                        easy_runs=row.easy_runs,
+                        intermediate_runs=row.intermediate_runs,
+                        advanced_runs=row.advanced_runs,
+                        expert_runs=row.expert_runs,
                     )
                 )
 

@@ -7,17 +7,14 @@ export function RadiusControl({ radiusKm, onChange }: RadiusControlProps) {
   return (
     <div
       style={{
-        position: "absolute",
-        top: "12px",
-        left: "12px",
         background: "var(--bg-secondary)",
         borderRadius: "var(--radius-sm)",
-        padding: "10px 14px",
+        padding: "8px 12px",
         display: "flex",
         alignItems: "center",
         gap: "10px",
-        zIndex: 10,
         boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+        border: "1px solid var(--bg-tertiary)",
       }}
     >
       <label style={{ fontSize: "12px", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>

@@ -11,6 +11,18 @@ function makeResort(overrides: Partial<Resort> & { score?: ConditionScore } = {}
     lng: -120.0,
     distanceKm: 100,
     elevation: 2000,
+    country: null,
+    region: null,
+    minElevation: null,
+    maxElevation: null,
+    vertical: null,
+    totalRunLengthKm: null,
+    runCount: null,
+    liftCount: null,
+    easyRuns: null,
+    intermediateRuns: null,
+    advancedRuns: null,
+    expertRuns: null,
     condition: {
       score: overrides.score ?? "EXCELLENT",
       temperature: -5,
@@ -25,7 +37,70 @@ function makeResort(overrides: Partial<Resort> & { score?: ConditionScore } = {}
 
 describe("ResortCardCarousel", () => {
   describe("empty state", () => {
-    it("shows the no-resorts message when given an empty array", () => {
+    it("shows the no-resorts message when given an empty array with no active filters", () => {
+      render(
+        <ResortCardCarousel
+          resorts={[]}
+          selectedId={null}
+          onSelect={vi.fn()}
+          hasActiveFilters={false}
+        />,
+      );
+      expect(screen.getByText(/No resorts found within this radius/)).toBeInTheDocument();
+    });
+
+    it("shows filter-specific empty message when resorts are empty and filters are active", () => {
+      render(
+        <ResortCardCarousel
+          resorts={[]}
+          selectedId={null}
+          onSelect={vi.fn()}
+          hasActiveFilters={true}
+        />,
+      );
+      expect(screen.getByText(/No resorts match your filters/)).toBeInTheDocument();
+    });
+
+    it("does not show the radius message when filters are active", () => {
+      render(
+        <ResortCardCarousel
+          resorts={[]}
+          selectedId={null}
+          onSelect={vi.fn()}
+          hasActiveFilters={true}
+        />,
+      );
+      expect(screen.queryByText(/No resorts found within this radius/)).not.toBeInTheDocument();
+    });
+
+    it("shows a reset hint when filters are active and empty", () => {
+      render(
+        <ResortCardCarousel
+          resorts={[]}
+          selectedId={null}
+          onSelect={vi.fn()}
+          hasActiveFilters={true}
+        />,
+      );
+      expect(screen.getByText(/reset/i)).toBeInTheDocument();
+    });
+
+    it("calls onResetFilters when reset hint is clicked", () => {
+      const onResetFilters = vi.fn();
+      render(
+        <ResortCardCarousel
+          resorts={[]}
+          selectedId={null}
+          onSelect={vi.fn()}
+          hasActiveFilters={true}
+          onResetFilters={onResetFilters}
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /reset/i }));
+      expect(onResetFilters).toHaveBeenCalledOnce();
+    });
+
+    it("shows the radius message when given an empty array and hasActiveFilters defaults to false", () => {
       render(<ResortCardCarousel resorts={[]} selectedId={null} onSelect={vi.fn()} />);
       expect(screen.getByText(/No resorts found within this radius/)).toBeInTheDocument();
     });
