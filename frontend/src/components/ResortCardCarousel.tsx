@@ -22,7 +22,9 @@ export function ResortCardCarousel({ resorts, selectedId, onSelect }: ResortCard
   useEffect(() => {
     if (!selectedId || !scrollRef.current) return;
     const card = scrollRef.current.querySelector(`[data-resort-id="${selectedId}"]`);
-    card?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    if (card && typeof card.scrollIntoView === "function") {
+      card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
   }, [selectedId]);
 
   if (resorts.length === 0) {
