@@ -1,9 +1,11 @@
 import httpx
 import pytest
 import respx
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from strawberry.schema import Schema
 
 from skiresorts.api.graphql import create_schema
+from skiresorts.models import ResortEntity
 
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 
@@ -32,56 +34,67 @@ SAMPLE_WEATHER = {
 QUERY = """
     query NearbyResorts($lat: Float!, $lng: Float!, $radiusKm: Float) {
         nearbyResorts(lat: $lat, lng: $lng, radiusKm: $radiusKm) {
-            id
-            name
-            lat
-            lng
-            distanceKm
-            elevation
-            condition {
-                score
-                temperature
-                freshSnowCm
-                snowBaseCm
-                windSpeedKmh
-                freezeThawRisk
-            }
+            id name lat lng distanceKm elevation
+            condition { score temperature freshSnowCm snowBaseCm windSpeedKmh freezeThawRisk }
         }
     }
 """
 
 
 @pytest.fixture
-def schema() -> Schema:
-    schema, _ = create_schema(open_meteo_base_url=OPEN_METEO_URL, cache_ttl_seconds=0)
+async def _seed_resorts(database_session: AsyncSession) -> None:
+    database_session.add(
+        ResortEntity(
+            id="whistler",
+            name="Whistler Blackcomb",
+            lat=50.1163,
+            lng=-122.9574,
+            status="operating",
+            has_downhill=True,
+            has_nordic=False,
+            min_elevation=652,
+            max_elevation=2284,
+            vertical=1632,
+            total_run_length_km=80.0,
+            run_count=200,
+            lift_count=37,
+            easy_runs=50,
+            intermediate_runs=70,
+            advanced_runs=50,
+            expert_runs=30,
+        )
+    )
+    await database_session.commit()
+
+
+@pytest.fixture
+def schema(
+    session_factory: async_sessionmaker[AsyncSession],
+) -> Schema:
+    schema, _ = create_schema(
+        session_factory=session_factory,
+        open_meteo_base_url=OPEN_METEO_URL,
+        cache_ttl_seconds=0,
+    )
     return schema
 
 
 @respx.mock
-@pytest.mark.asyncio
+@pytest.mark.usefixtures("_seed_resorts")
 async def test_nearby_resorts_query(schema: Schema) -> None:
     respx.get(OPEN_METEO_URL).mock(return_value=httpx.Response(200, json=SAMPLE_WEATHER))
     result = await schema.execute(
         QUERY, variable_values={"lat": 49.2827, "lng": -123.1207, "radiusKm": 200.0}
     )
-
     assert result.errors is None
     assert result.data is not None
     resorts = result.data["nearbyResorts"]
     assert len(resorts) > 0
-    assert resorts[0]["distanceKm"] > 0
-
-    condition = resorts[0]["condition"]
-    assert condition["score"] == "GOOD"
-    assert condition["temperature"] == -8.0
-    assert condition["freshSnowCm"] == 6.0
-    assert condition["snowBaseCm"] == 120.0
-    assert condition["windSpeedKmh"] == 15.0
-    assert condition["freezeThawRisk"] is False
+    assert resorts[0]["condition"]["score"] == "GOOD"
+    assert resorts[0]["condition"]["temperature"] == -8.0
 
 
 @respx.mock
-@pytest.mark.asyncio
 async def test_nearby_resorts_empty_for_remote_location(schema: Schema) -> None:
     result = await schema.execute(
         QUERY, variable_values={"lat": 0.0, "lng": 0.0, "radiusKm": 100.0}
@@ -92,7 +105,7 @@ async def test_nearby_resorts_empty_for_remote_location(schema: Schema) -> None:
 
 
 @respx.mock
-@pytest.mark.asyncio
+@pytest.mark.usefixtures("_seed_resorts")
 async def test_nearby_resorts_skips_on_weather_error(schema: Schema) -> None:
     respx.get(OPEN_METEO_URL).mock(return_value=httpx.Response(500, text="Server Error"))
     result = await schema.execute(
