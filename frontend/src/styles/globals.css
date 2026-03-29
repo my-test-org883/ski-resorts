@@ -40,3 +40,43 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
 }
+
+input[type="range"]::-webkit-slider-thumb {
+  pointer-events: auto;
+}
+
+input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+}
+
+/* Filter panel scrollbar */
+.filter-panel-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-panel-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filter-panel-content::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.filter-panel-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Carousel scrollbar */
+::-webkit-scrollbar {
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+}

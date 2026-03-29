@@ -77,6 +77,34 @@ async def _seed_resorts(database_session: AsyncSession) -> None:
 
 
 @pytest.fixture
+async def _seed_resorts_null_country(database_session: AsyncSession) -> None:
+    database_session.add(
+        ResortEntity(
+            id="whistler",
+            name="Whistler Blackcomb",
+            lat=50.1163,
+            lng=-122.9574,
+            status="operating",
+            country=None,
+            region=None,
+            has_downhill=True,
+            has_nordic=False,
+            min_elevation=652,
+            max_elevation=2284,
+            vertical=1632,
+            total_run_length_km=80.0,
+            run_count=200,
+            lift_count=37,
+            easy_runs=50,
+            intermediate_runs=70,
+            advanced_runs=50,
+            expert_runs=30,
+        )
+    )
+    await database_session.commit()
+
+
+@pytest.fixture
 def service(database_session: AsyncSession) -> ResortService:
     return ResortService(session=database_session)
 
@@ -114,6 +142,33 @@ async def test_find_nearby_includes_elevation(service: ResortService) -> None:
     nearby = await service.find_nearby(lat=49.2827, lng=-123.1207, radius_km=200.0)
     assert len(nearby) > 0
     assert nearby[0].max_elevation == 2284
+
+
+@pytest.mark.usefixtures("_seed_resorts")
+async def test_find_nearby_includes_resort_details(service: ResortService) -> None:
+    nearby = await service.find_nearby(lat=49.2827, lng=-123.1207, radius_km=200.0)
+    whistler = next(r for r in nearby if r.id == "whistler")
+
+    assert whistler.country == "Canada"
+    assert whistler.has_downhill is True
+    assert whistler.has_nordic is False
+    assert whistler.min_elevation == 652.0
+    assert whistler.vertical == 1632.0
+    assert whistler.total_run_length_km == 80.0
+    assert whistler.run_count == 200
+    assert whistler.lift_count == 37
+    assert whistler.easy_runs == 50
+    assert whistler.intermediate_runs == 70
+    assert whistler.advanced_runs == 50
+    assert whistler.expert_runs == 30
+
+
+@pytest.mark.usefixtures("_seed_resorts_null_country")
+async def test_find_nearby_null_country_region_passes_through(service: ResortService) -> None:
+    nearby = await service.find_nearby(lat=49.2827, lng=-123.1207, radius_km=200.0)
+    assert len(nearby) > 0
+    assert nearby[0].country is None
+    assert nearby[0].region is None
 
 
 def test_haversine_distance_known_value() -> None:

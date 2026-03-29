@@ -16,6 +16,18 @@ export const NEARBY_RESORTS_QUERY = `
       lng
       distanceKm
       elevation
+      country
+      region
+      minElevation
+      maxElevation
+      vertical
+      totalRunLengthKm
+      runCount
+      liftCount
+      easyRuns
+      intermediateRuns
+      advancedRuns
+      expertRuns
       condition {
         score
         temperature

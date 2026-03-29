@@ -1,14 +1,18 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Provider } from "urql";
 import { graphqlClient } from "./lib/graphql";
 import { useGeolocation } from "./hooks/useGeolocation";
 import { useResorts } from "./hooks/useResorts";
+import { useFilters } from "./hooks/useFilters";
+import { useFilteredResorts } from "./hooks/useFilteredResorts";
 import { Map } from "./components/Map";
 import { ResortCardCarousel } from "./components/ResortCardCarousel";
 import { RadiusControl } from "./components/RadiusControl";
 import { CitySearch } from "./components/CitySearch";
 import { MapControls } from "./components/MapControls";
 import { LoadingScreen } from "./components/LoadingScreen";
+import { FilterToggleButton } from "./components/FilterToggleButton";
+import { FilterPanel } from "./components/FilterPanel";
 import type { Resort } from "./types/resort";
 import type { CityOverride } from "./types/city";
 import "./styles/globals.css";
@@ -20,6 +24,7 @@ function AppContent() {
   const [radiusKm, setRadiusKm] = useState(300);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [flyToId, setFlyToId] = useState<string | null>(null);
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [cityOverride, setCityOverride] = useState<CityOverride | null>(null);
   const [flyToCoords, setFlyToCoords] = useState<{ lat: number; lng: number } | null>(null);
 
@@ -31,6 +36,21 @@ function AppContent() {
     loading: resortsLoading,
     error: resortsError,
   } = useResorts(effectiveLat, effectiveLng, radiusKm);
+
+  const { filters, activeFilterCount, updateFilter, resetFilters } = useFilters();
+  const filteredResorts = useFilteredResorts(resorts, filters);
+
+  const countryOptions = useMemo(() => {
+    const countries = resorts.flatMap((r) => (r.country !== null ? [r.country] : []));
+    return [...new Set(countries)].sort();
+  }, [resorts]);
+
+  // Clear selection when filtered resort disappears
+  useEffect(() => {
+    if (selectedId && !filteredResorts.some((r) => r.id === selectedId)) {
+      setSelectedId(null);
+    }
+  }, [selectedId, filteredResorts]);
 
   const handleSelectFromMap = useCallback((resort: Resort) => {
     setSelectedId(resort.id);
@@ -98,7 +118,7 @@ function AppContent() {
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <div style={{ flex: 1, position: "relative" }}>
         <Map
-          resorts={resorts}
+          resorts={filteredResorts}
           userLat={geo.lat}
           userLng={geo.lng}
           selectedId={selectedId}
@@ -111,6 +131,10 @@ function AppContent() {
           showUserMarker={cityOverride === null}
         />
         <MapControls>
+          <FilterToggleButton
+            activeFilterCount={activeFilterCount}
+            onClick={() => setFilterPanelOpen((prev) => !prev)}
+          />
           <CitySearch
             selectedCity={cityOverride}
             onSelect={handleCitySelect}
@@ -119,11 +143,24 @@ function AppContent() {
           />
           <RadiusControl radiusKm={radiusKm} onChange={handleRadiusChange} />
         </MapControls>
+
+        {/* Filter panel — always rendered for slide animation */}
+        <FilterPanel
+          isOpen={filterPanelOpen}
+          filters={filters}
+          onUpdateFilter={updateFilter}
+          onReset={resetFilters}
+          onClose={() => setFilterPanelOpen(false)}
+          activeFilterCount={activeFilterCount}
+          countryOptions={countryOptions}
+        />
       </div>
       <ResortCardCarousel
-        resorts={resorts}
+        resorts={filteredResorts}
         selectedId={selectedId}
         onSelect={handleSelectFromCarousel}
+        hasActiveFilters={activeFilterCount > 0}
+        onResetFilters={resetFilters}
       />
     </div>
   );
