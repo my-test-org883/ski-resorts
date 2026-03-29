@@ -61,7 +61,7 @@ describe("CitySearch", () => {
     });
 
     it("does not fetch for input shorter than 2 characters", async () => {
-      const fetchSpy = vi.spyOn(global, "fetch");
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
       render(
         <CitySearch
           selectedCity={null}
@@ -80,7 +80,7 @@ describe("CitySearch", () => {
     });
 
     it("fetches geocoding results after typing 2+ characters", async () => {
-      const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue({
+      const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
         ok: true,
         json: async () => mockGeocodingResponse,
       } as Response);
@@ -104,7 +104,7 @@ describe("CitySearch", () => {
     });
 
     it("shows suggestions in a dropdown after typing", async () => {
-      vi.spyOn(global, "fetch").mockResolvedValue({
+      vi.spyOn(globalThis, "fetch").mockResolvedValue({
         ok: true,
         json: async () => mockGeocodingResponse,
       } as Response);
@@ -129,7 +129,7 @@ describe("CitySearch", () => {
     });
 
     it("calls onSelect with correct city data when a suggestion is clicked", async () => {
-      vi.spyOn(global, "fetch").mockResolvedValue({
+      vi.spyOn(globalThis, "fetch").mockResolvedValue({
         ok: true,
         json: async () => mockGeocodingResponse,
       } as Response);
@@ -163,7 +163,7 @@ describe("CitySearch", () => {
     });
 
     it("closes the dropdown on Escape key", async () => {
-      vi.spyOn(global, "fetch").mockResolvedValue({
+      vi.spyOn(globalThis, "fetch").mockResolvedValue({
         ok: true,
         json: async () => mockGeocodingResponse,
       } as Response);
