@@ -6,7 +6,25 @@ on:
   pull_request:
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+
   lint-backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,6 +48,8 @@ jobs:
         run: poetry run ruff check .
 
   lint-frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -49,6 +69,8 @@ jobs:
         run: npm run format:check
 
   test-backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -66,6 +88,8 @@ jobs:
         run: poetry run pytest -v
 
   test-frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -83,6 +107,8 @@ jobs:
         run: npm run test:coverage
 
   build-frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -100,8 +126,8 @@ jobs:
         run: npm run build
 
   deploy-frontend:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [lint-frontend, test-frontend, build-frontend]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.changes.outputs.frontend == 'true'
+    needs: [changes, lint-frontend, test-frontend, build-frontend]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -117,8 +143,8 @@ jobs:
         run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   deploy-backend:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [lint-backend, test-backend]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.changes.outputs.backend == 'true'
+    needs: [changes, lint-backend, test-backend]
     runs-on: ubuntu-latest
     defaults:
       run:
