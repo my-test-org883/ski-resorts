@@ -1,4 +1,4 @@
-.PHONY: install install-backend install-frontend lint format test test-coverage build dev load-resorts
+.PHONY: install install-backend install-frontend lint format test test-coverage build dev load-resorts pre-commit
 
 install: install-backend install-frontend
 
@@ -42,6 +42,8 @@ dev-backend:
 
 dev-frontend:
 	cd frontend && npm run dev
+
+pre-commit: format lint test build
 
 load-resorts:
 	cd backend && poetry run python -m scripts.load_resorts
