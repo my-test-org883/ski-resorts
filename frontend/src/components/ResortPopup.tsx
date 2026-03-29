@@ -8,7 +8,7 @@ export function renderPopupHTML(resort: Resort): string {
   return `
     <div style="font-family: Inter, -apple-system, sans-serif; padding: 4px; min-width: 200px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <strong style="font-size: 15px;">${resort.name}</strong>
+        <strong style="font-size: 15px; color: #1e293b;">${resort.name}</strong>
         <span style="background: ${color}22; color: ${color}; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">
           ${label}
         </span>

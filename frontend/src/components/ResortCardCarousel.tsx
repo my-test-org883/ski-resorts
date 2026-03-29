@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import type { Resort } from "../types/resort";
 import { ResortCard } from "./ResortCard";
 
@@ -18,6 +18,12 @@ export function ResortCardCarousel({ resorts, selectedId, onSelect }: ResortCard
       scrollRef.current.scrollLeft += e.deltaY;
     }
   }, []);
+
+  useEffect(() => {
+    if (!selectedId || !scrollRef.current) return;
+    const card = scrollRef.current.querySelector(`[data-resort-id="${selectedId}"]`);
+    card?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [selectedId]);
 
   if (resorts.length === 0) {
     return (
@@ -56,12 +62,13 @@ export function ResortCardCarousel({ resorts, selectedId, onSelect }: ResortCard
       }}
     >
       {sorted.map((resort) => (
-        <ResortCard
-          key={resort.id}
-          resort={resort}
-          selected={resort.id === selectedId}
-          onClick={() => onSelect(resort)}
-        />
+        <div key={resort.id} data-resort-id={resort.id}>
+          <ResortCard
+            resort={resort}
+            selected={resort.id === selectedId}
+            onClick={() => onSelect(resort)}
+          />
+        </div>
       ))}
     </div>
   );
