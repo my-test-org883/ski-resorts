@@ -16,19 +16,26 @@ function AppContent() {
   const geo = useGeolocation();
   const [radiusKm, setRadiusKm] = useState(300);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [flyToId, setFlyToId] = useState<string | null>(null);
   const {
     resorts,
     loading: resortsLoading,
     error: resortsError,
   } = useResorts(geo.lat, geo.lng, radiusKm);
 
-  const handleSelectResort = useCallback((resort: Resort) => {
+  const handleSelectFromMap = useCallback((resort: Resort) => {
     setSelectedId(resort.id);
+  }, []);
+
+  const handleSelectFromCarousel = useCallback((resort: Resort) => {
+    setSelectedId(resort.id);
+    setFlyToId(resort.id);
   }, []);
 
   const handleRadiusChange = useCallback((radius: number) => {
     setRadiusKm(radius);
     setSelectedId(null);
+    setFlyToId(null);
   }, []);
 
   if (geo.loading) {
@@ -70,12 +77,18 @@ function AppContent() {
           userLat={geo.lat}
           userLng={geo.lng}
           selectedId={selectedId}
-          onSelectResort={handleSelectResort}
+          flyToId={flyToId}
+          onFlyToDone={() => setFlyToId(null)}
+          onSelectResort={handleSelectFromMap}
           accessToken={MAPBOX_TOKEN}
         />
         <RadiusControl radiusKm={radiusKm} onChange={handleRadiusChange} />
       </div>
-      <ResortCardCarousel resorts={resorts} selectedId={selectedId} onSelect={handleSelectResort} />
+      <ResortCardCarousel
+        resorts={resorts}
+        selectedId={selectedId}
+        onSelect={handleSelectFromCarousel}
+      />
     </div>
   );
 }

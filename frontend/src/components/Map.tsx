@@ -9,6 +9,8 @@ interface MapProps {
   userLat: number;
   userLng: number;
   selectedId: string | null;
+  flyToId: string | null;
+  onFlyToDone: () => void;
   onSelectResort: (resort: Resort) => void;
   accessToken: string;
 }
@@ -18,6 +20,8 @@ export function Map({
   userLat,
   userLng,
   selectedId,
+  flyToId,
+  onFlyToDone,
   onSelectResort,
   accessToken,
 }: MapProps) {
@@ -115,6 +119,15 @@ export function Map({
       .setHTML(renderPopupHTML(resort))
       .addTo(mapRef.current);
   }, [selectedId, resorts]);
+
+  useEffect(() => {
+    if (!flyToId || !mapRef.current) return;
+    const resort = resorts.find((r) => r.id === flyToId);
+    if (!resort) return;
+
+    mapRef.current.flyTo({ center: [resort.lng, resort.lat], zoom: 10, duration: 800 });
+    onFlyToDone();
+  }, [flyToId, resorts, onFlyToDone]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }
