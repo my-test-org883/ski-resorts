@@ -9,6 +9,8 @@ dependencies = [
   "uvicorn[standard]>=0.34.0",
   "httpx>=0.28.0",
   "pydantic-settings>=2.7.0",
+  "sqlalchemy[asyncio]>=2.0.48",
+  "aiosqlite>=0.22.1",
 ]
 
 [tool.poetry]
