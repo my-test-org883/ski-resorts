@@ -13,6 +13,9 @@ interface MapProps {
   onFlyToDone: () => void;
   onSelectResort: (resort: Resort) => void;
   accessToken: string;
+  flyToCoords?: { lat: number; lng: number } | null;
+  onFlyToCoordsDone?: () => void;
+  showUserMarker?: boolean;
 }
 
 export function Map({
@@ -24,11 +27,18 @@ export function Map({
   onFlyToDone,
   onSelectResort,
   accessToken,
+  flyToCoords = null,
+  onFlyToCoordsDone = () => {},
+  showUserMarker = true,
 }: MapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
+  const userMarkerRef = useRef<mapboxgl.Marker | null>(null);
+  const initialLatRef = useRef(userLat);
+  const initialLngRef = useRef(userLng);
+  const showUserMarkerRef = useRef(showUserMarker);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -37,7 +47,7 @@ export function Map({
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: "mapbox://styles/mapbox/dark-v11",
-      center: [userLng, userLat],
+      center: [initialLngRef.current, initialLatRef.current],
       zoom: 7,
     });
 
@@ -51,7 +61,14 @@ export function Map({
       border-radius: 50%;
       box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
     `;
-    new mapboxgl.Marker({ element: userEl }).setLngLat([userLng, userLat]).addTo(map);
+    const userMarker = new mapboxgl.Marker({ element: userEl }).setLngLat([
+      initialLngRef.current,
+      initialLatRef.current,
+    ]);
+    if (showUserMarkerRef.current) {
+      userMarker.addTo(map);
+    }
+    userMarkerRef.current = userMarker;
 
     map.on("click", () => {
       popupRef.current?.remove();
@@ -63,8 +80,9 @@ export function Map({
     return () => {
       map.remove();
       mapRef.current = null;
+      userMarkerRef.current = null;
     };
-  }, [userLat, userLng, accessToken]);
+  }, [accessToken]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -128,6 +146,25 @@ export function Map({
     mapRef.current.flyTo({ center: [resort.lng, resort.lat], zoom: 10, duration: 800 });
     onFlyToDone();
   }, [flyToId, resorts, onFlyToDone]);
+
+  useEffect(() => {
+    if (!flyToCoords || !mapRef.current) return;
+    mapRef.current.flyTo({ center: [flyToCoords.lng, flyToCoords.lat], zoom: 8, duration: 1200 });
+    onFlyToCoordsDone();
+  }, [flyToCoords, onFlyToCoordsDone]);
+
+  useEffect(() => {
+    showUserMarkerRef.current = showUserMarker;
+    const map = mapRef.current;
+    const userMarker = userMarkerRef.current;
+    if (!map || !userMarker) return;
+
+    if (showUserMarker) {
+      userMarker.addTo(map);
+    } else {
+      userMarker.remove();
+    }
+  }, [showUserMarker]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }
