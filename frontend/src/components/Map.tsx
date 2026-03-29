@@ -49,6 +49,11 @@ export function Map({
     `;
     new mapboxgl.Marker({ element: userEl }).setLngLat([userLng, userLat]).addTo(map);
 
+    map.on("click", () => {
+      popupRef.current?.remove();
+      popupRef.current = null;
+    });
+
     mapRef.current = map;
 
     return () => {
