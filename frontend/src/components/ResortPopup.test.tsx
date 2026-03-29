@@ -77,7 +77,7 @@ describe("renderPopupHTML", () => {
 
   it("renders distanceKm metric", () => {
     const html = renderPopupHTML(makeResort({ distanceKm: 27.3 }));
-    expect(html).toContain("27.3");
+    expect(html).toContain("27 km");
   });
 
   it("renders elevation metric", () => {
